@@ -1,36 +1,55 @@
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { rules } from '~/utils/rules'
+
+interface FormData {
+  email: string
+  password: string
+  confirm_password: string
+}
 
 const Register = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>()
+
+  const onSubmit = handleSubmit((data) => {
+    // console.log(data)
+  })
+
+  console.log(errors)
   return (
     <div className='bg-orangeCustom'>
       <div className='max-w-7xl mx-auto px-4'>
         <div className='grid grid-cols-1 lg:grid-cols-5 lg:pr-10 py-12 lg:py-32'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form className='bg-white rounded p-10 shadow-sm'>
+            <form className='bg-white rounded p-10 shadow-sm' onSubmit={onSubmit} noValidate>
               <div className='text-2xl'>Đăng ký</div>
               <input
                 type='email'
-                name='email'
                 placeholder='Email'
+                {...register('email', rules.email)}
                 className='mt-8 w-full p-3 border border-gray-300 outline-none focus:border-gray-500 rounded-sm focus:shadow-sm'
               />
-              <div className='mt-1 min-h-5 text-red-600 text-sm'></div>
+              <div className='mt-1 min-h-5 text-red-600 text-sm'>{errors.email?.message}</div>
 
               <input
                 type='password'
-                name='password'
                 placeholder='Password'
+                {...register('password', rules.password)}
                 className='mt-2 w-full p-3 border border-gray-300 outline-none focus:border-gray-500 rounded-sm focus:shadow-sm'
               />
-              <div className='mt-1 min-h-5 text-red-600 text-sm'></div>
+              <div className='mt-1 min-h-5 text-red-600 text-sm'>{errors.password?.message}</div>
 
               <input
                 type='password'
-                name='confirm_password'
                 placeholder='Confirm Password'
+                {...register('confirm_password', rules.confirm_password)}
                 className='mt-2 w-full p-3 border border-gray-300 outline-none focus:border-gray-500 rounded-sm focus:shadow-sm'
               />
-              <div className='mt-1 min-h-5 text-red-600 text-sm'></div>
+              <div className='mt-1 min-h-5 text-red-600 text-sm'>{errors.confirm_password?.message}</div>
 
               <div className='mt-2'>
                 <button className='flex items-center justify-center uppercase w-full bg-orangeCustom/80 px-2 py-4 text-sm text-white hover:bg-orangeCustom/90'>
