@@ -1,23 +1,38 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { omit, type Omit } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import authApi from '~/apis/auth.api'
 import Input from '~/components/Input/Input'
 import { schema, type RegisterType } from '~/utils/rules'
 
+type FormData = RegisterType
 const Register = () => {
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<RegisterType>({
+  } = useForm<FormData>({
     resolver: zodResolver(schema) // Apply the zodResolver
   })
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data)
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.registerAccount(body)
   })
 
-  // console.log(errors)
+  const onSubmit = handleSubmit((data) => {
+    const body = omit(data, ['confirm_password'])
+    registerAccountMutation.mutate(body, {
+      // onError: (error, variables, context) => {
+      //   // An error happened!
+      // },
+      onSuccess: (data, variables, context) => {
+        console.log(data)
+      }
+    })
+  })
+
   return (
     <div className='bg-orangeCustom'>
       <div className='my-container'>
