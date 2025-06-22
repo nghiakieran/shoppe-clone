@@ -1,8 +1,5 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-orangeCustom: #ee4d2d;
-}
 html {
   height: 100%;
   line-height: 1.2;
@@ -11,4 +8,12 @@ html {
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 400;
+}
+
+@theme {
+  --color-orangeCustom: #ee4d2d;
+}
+
+@utility my-container {
+  @apply max-w-7xl mx-auto px-4;
 }

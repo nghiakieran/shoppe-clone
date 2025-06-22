@@ -24,7 +24,7 @@ const Register = () => {
   // console.log(errors)
   return (
     <div className='bg-orangeCustom'>
-      <div className='max-w-7xl mx-auto px-4'>
+      <div className='my-container'>
         <div className='grid grid-cols-1 lg:grid-cols-5 lg:pr-10 py-12 lg:py-32'>
           <div className='lg:col-span-2 lg:col-start-4'>
             <form className='bg-white rounded p-10 shadow-sm' onSubmit={onSubmit} noValidate>
