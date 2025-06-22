@@ -2,24 +2,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import Input from '~/components/Input/Input'
-import { schema } from '~/utils/rules'
-
-export interface FormData {
-  email: string
-  password: string
-  confirm_password: string
-}
+import { schema, type RegisterType } from '~/utils/rules'
 
 const Register = () => {
   const {
     register,
     handleSubmit,
-    // getValues,
     formState: { errors }
-  } = useForm<FormData>({
+  } = useForm<RegisterType>({
     resolver: zodResolver(schema) // Apply the zodResolver
   })
-  // const rules = getRules(getValues)
+
   const onSubmit = handleSubmit((data) => {
     console.log(data)
   })
