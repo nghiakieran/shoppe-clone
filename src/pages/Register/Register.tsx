@@ -1,7 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import Input from '~/components/Input/Input'
-import { getRules } from '~/utils/rules'
+import { schema } from '~/utils/rules'
 
 export interface FormData {
   email: string
@@ -13,11 +14,12 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    getValues,
+    // getValues,
     formState: { errors }
-  } = useForm<FormData>()
-
-  const rules = getRules(getValues)
+  } = useForm<FormData>({
+    resolver: zodResolver(schema) // Apply the zodResolver
+  })
+  // const rules = getRules(getValues)
   const onSubmit = handleSubmit((data) => {
     console.log(data)
   })
@@ -37,7 +39,6 @@ const Register = () => {
                 register={register}
                 name='email'
                 errorMessage={errors.email?.message}
-                rules={rules.email}
               />
 
               <Input
@@ -47,7 +48,6 @@ const Register = () => {
                 register={register}
                 name='password'
                 errorMessage={errors.password?.message}
-                rules={rules.password}
               />
 
               <Input
@@ -57,7 +57,6 @@ const Register = () => {
                 register={register}
                 name='confirm_password'
                 errorMessage={errors.confirm_password?.message}
-                rules={rules.confirm_password}
               />
 
               <div className='mt-2'>

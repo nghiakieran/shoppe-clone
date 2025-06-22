@@ -1,6 +1,6 @@
 import type { RegisterOptions, UseFormGetValues } from 'react-hook-form'
 import type { FormData } from '~/pages/Register/Register'
-
+import { z } from 'zod/v4'
 type Rules = {
   [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions<FormData, key>
 }
@@ -57,3 +57,23 @@ export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
         : undefined
   }
 })
+
+export const schema = z
+  .object({
+    email: z
+      .email({ error: 'Email không hợp lệ' })
+      .min(5, { error: 'Độ dài từ 5 - 160 ký tự' })
+      .max(160, { error: 'Độ dài từ 5 - 160 ký tự' }),
+    password: z
+      .string({ error: 'Password là bắt buộc' })
+      .min(6, { error: 'Độ dài từ 6 - 160 ký tự' })
+      .max(160, { error: 'Độ dài từ 6 - 160 ký tự' }),
+    confirm_password: z
+      .string({ error: 'Nhập lại password là bắt buộc' })
+      .min(6, { error: 'Độ dài từ 6 - 160 ký tự' })
+      .max(160, { error: 'Độ dài từ 6 - 160 ký tự' })
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    error: 'Nhập lại password không khớp',
+    path: ['confirm_password'] // path of error
+  })
