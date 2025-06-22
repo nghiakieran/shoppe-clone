@@ -5,14 +5,17 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import authApi from '~/apis/auth.api'
 import Input from '~/components/Input/Input'
+import type { ErrorResponse } from '~/types/utils.type'
 import { schema, type RegisterType } from '~/utils/rules'
+import { isAxiosUnprocessableEntityError } from '~/utils/utils'
 
 type FormData = RegisterType
 const Register = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setError
   } = useForm<FormData>({
     resolver: zodResolver(schema) // Apply the zodResolver
   })
@@ -24,11 +27,21 @@ const Register = () => {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
-      // onError: (error, variables, context) => {
-      //   // An error happened!
-      // },
-      onSuccess: (data, variables, context) => {
+      onSuccess: (data) => {
         console.log(data)
+      },
+      onError: (error) => {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
+          const formError = error.response?.data.data
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(key as keyof Omit<FormData, 'confirm_password'>, {
+                message: formError[key as keyof Omit<FormData, 'confirm_password'>],
+                type: 'Server'
+              })
+            })
+          }
+        }
       }
     })
   })
