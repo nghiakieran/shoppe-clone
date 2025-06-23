@@ -1,29 +1,71 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 
+import authApi from '~/apis/auth.api'
+import Input from '~/components/Input/Input'
+import type { ErrorResponse } from '~/types/utils.type'
+import { loginSchema, type LoginType } from '~/utils/rules'
+import { isAxiosUnprocessableEntityError } from '~/utils/utils'
+
+type FormData = LoginType
 const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError
+  } = useForm<FormData>({
+    resolver: zodResolver(loginSchema) // Apply the zodResolver
+  })
+
+  const loginMutation = useMutation({ mutationFn: (body: FormData) => authApi.login(body) })
+
+  const onSubmit = handleSubmit((data) => {
+    loginMutation.mutate(data, {
+      onSuccess: (data) => {
+        console.log(data)
+      },
+      onError: (error) => {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
+          const formError = error.response?.data.data
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(key as keyof FormData, {
+                message: formError[key as keyof FormData],
+                type: 'Server'
+              })
+            })
+          }
+        }
+      }
+    })
+  })
+
   return (
     <div className='bg-orangeCustom'>
       <div className='my-container'>
         <div className='grid grid-cols-1 lg:grid-cols-5 lg:pr-10 py-12 lg:py-32'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form className='bg-white rounded p-10 shadow-sm'>
+            <form className='bg-white rounded p-10 shadow-sm' onSubmit={onSubmit} noValidate>
               <div className='text-2xl'>Đăng nhập</div>
-              <input
+              <Input
+                className='mt-8'
                 type='email'
-                name='email'
                 placeholder='Email'
-                className='mt-8 w-full p-3 border border-gray-300 outline-none focus:border-gray-500 rounded-sm focus:shadow-sm'
+                register={register}
+                name='email'
+                errorMessage={errors.email?.message}
               />
-              <div className='mt-1 min-h-5 text-red-600 text-sm'></div>
-
-              <input
+              <Input
+                className='mt-2'
                 type='password'
-                name='password'
                 placeholder='Password'
-                className='mt-2 w-full p-3 border border-gray-300 outline-none focus:border-gray-500 rounded-sm focus:shadow-sm'
+                register={register}
+                name='password'
+                errorMessage={errors.password?.message}
               />
-              <div className='mt-1 min-h-5 text-red-600 text-sm'></div>
-
               <div className='mt-2'>
                 <button className='flex items-center justify-center uppercase w-full bg-orangeCustom/80 px-2 py-4 text-sm text-white hover:bg-orangeCustom/90'>
                   Đăng nhập

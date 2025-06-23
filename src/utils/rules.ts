@@ -82,4 +82,4 @@ export const schema = z
 
 export type RegisterType = z.infer<typeof schema>
 export const loginSchema = schema.omit({ confirm_password: true })
-export type loginType = z.infer<typeof loginSchema>
+export type LoginType = z.infer<typeof loginSchema>
