@@ -34,7 +34,7 @@ const Header = () => {
                 d='M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418'
               />
             </svg>
-            <span className='mx-1'>{currentLanguage}</span>
+            <span className='mx-1 mt-0.5'>{currentLanguage}</span>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -128,7 +128,7 @@ const Header = () => {
           <div className='col-span-1 justify-self-end'>
             <Popover
               renderPopover={
-                <div className='relative  max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
+                <div className='relative max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
                   {/* {purchasesInCart && purchasesInCart.length > 0 ? (
                     <div className='p-2'>
                       <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
@@ -170,6 +170,37 @@ const Header = () => {
                       <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
                     </div>
                   )} */}
+                  <div className='p-2'>
+                    <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
+                    <div className='mt-5'>
+                      <div className='mt-2 flex py-2 hover:bg-gray-100'>
+                        <div className='flex-shrink-0'>
+                          <img
+                            src='https://images.unsplash.com/photo-1750276474538-335f7b2bfcfa?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                            alt='anh'
+                            className='h-11 w-11 object-cover'
+                          />
+                        </div>
+                        <div className='ml-2 flex-grow overflow-hidden'>
+                          <div className='truncate'>
+                            Giày sandal Buenas 2628 LEATHER màu đen - ghi, quai hậu nam nữ unisex học sinh đế cao 4cm
+                          </div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orangeCustom'>₫308.850</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='mt-6 flex items-center justify-between'>
+                      <div className='text-xs capitalize text-gray-500'>Thêm hàng vào giỏ</div>
+                      <Link
+                        to=''
+                        className='rounded-sm bg-orangeCustom px-4 py-2 capitalize text-white hover:bg-opacity-90'
+                      >
+                        Xem giỏ hàng
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               }
             >
@@ -188,11 +219,11 @@ const Header = () => {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
-                {purchasesInCart && purchasesInCart.length > 0 && (
+                {/* {purchasesInCart && purchasesInCart.length > 0 && (
                   <span className='absolute top-[-5px] left-[17px] rounded-full bg-white px-[9px] py-[1px] text-xs text-orange '>
                     {purchasesInCart?.length}
                   </span>
-                )}
+                )} */}
               </Link>
             </Popover>
           </div>
