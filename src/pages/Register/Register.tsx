@@ -1,16 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { omit, type Omit } from 'lodash'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import authApi from '~/apis/auth.api'
 import Input from '~/components/Input/Input'
+import { AppContext } from '~/contexts/app.context'
 import type { ErrorResponse } from '~/types/utils.type'
 import { schema, type RegisterType } from '~/utils/rules'
 import { isAxiosUnprocessableEntityError } from '~/utils/utils'
 
 type FormData = RegisterType
 const Register = () => {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -27,8 +31,9 @@ const Register = () => {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => {
-        console.log(data)
+      onSuccess: () => {
+        setIsAuthenticated(true)
+        navigate('/')
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {

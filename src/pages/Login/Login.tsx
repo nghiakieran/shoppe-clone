@@ -1,16 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import authApi from '~/apis/auth.api'
 import Input from '~/components/Input/Input'
+import { AppContext } from '~/contexts/app.context'
 import type { ErrorResponse } from '~/types/utils.type'
 import { loginSchema, type LoginType } from '~/utils/rules'
 import { isAxiosUnprocessableEntityError } from '~/utils/utils'
 
 type FormData = LoginType
 const Login = () => {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -24,8 +28,9 @@ const Login = () => {
 
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
-      onSuccess: (data) => {
-        console.log(data)
+      onSuccess: () => {
+        setIsAuthenticated(true)
+        navigate('/')
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {

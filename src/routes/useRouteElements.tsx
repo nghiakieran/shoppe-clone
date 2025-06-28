@@ -5,12 +5,13 @@ import Register from '~/pages/Register/Register'
 import RegisterLayout from '~/layout/RegisterLayout/RegisterLayout'
 import MainLayout from '~/layout/MainLayout/MainLayout'
 import Profile from '~/pages/Profile/Profile'
-import ProtectedRoute from './ProtectedRoute'
+import { AppContext } from '~/contexts/app.context'
+import { useContext } from 'react'
 import RejectedRoute from './RejectedRoute'
-
-const isAuthenticated = true
+import ProtectedRoute from './ProtectedRoute'
 
 const useRouteElements = () => {
+  const { isAuthenticated } = useContext(AppContext)
   const routeElements = useRoutes([
     {
       index: true, // Không quan tâm thứ tự đặt object này ở đâu tránh lỗi vòng lặp
@@ -22,11 +23,11 @@ const useRouteElements = () => {
       )
     },
     {
-      path: '',
+      path: '/',
       element: <RejectedRoute isAuthenticated={isAuthenticated} />,
       children: [
         {
-          path: 'login',
+          path: '/login',
           element: (
             <RegisterLayout>
               <Login />
@@ -34,7 +35,7 @@ const useRouteElements = () => {
           )
         },
         {
-          path: 'register',
+          path: '/register',
           element: (
             <RegisterLayout>
               <Register />
@@ -44,11 +45,11 @@ const useRouteElements = () => {
       ]
     },
     {
-      path: '',
+      path: '/',
       element: <ProtectedRoute isAuthenticated={isAuthenticated} />,
       children: [
         {
-          path: 'profile',
+          path: '/profile',
           element: (
             <MainLayout>
               <Profile />
