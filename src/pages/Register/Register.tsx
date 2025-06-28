@@ -5,6 +5,7 @@ import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import authApi from '~/apis/auth.api'
+import Button from '~/components/Button/Button'
 import Input from '~/components/Input/Input'
 import { AppContext } from '~/contexts/app.context'
 import type { ErrorResponse } from '~/types/utils.type'
@@ -86,9 +87,13 @@ const Register = () => {
               />
 
               <div className='mt-2'>
-                <button className='flex items-center justify-center uppercase w-full bg-orangeCustom/80 px-2 py-4 text-sm text-white hover:bg-orangeCustom/90'>
+                <Button
+                  isLoading={registerAccountMutation.isPending}
+                  disabled={registerAccountMutation.isPending}
+                  className='flex items-center justify-center uppercase w-full bg-orangeCustom/80 px-2 py-4 text-sm text-white hover:bg-orangeCustom/90'
+                >
                   Đăng ký
-                </button>
+                </Button>
               </div>
               <div className='mt-8 flex items-center justify-center'>
                 <span className='text-gray-400'>Bạn đã có tài khoản?</span>
