@@ -4,14 +4,16 @@ import { useMutation } from '@tanstack/react-query'
 import authApi from '~/apis/auth.api'
 import { useContext } from 'react'
 import { AppContext } from '~/contexts/app.context'
+import path from '~/constants/path'
 
 const Header = () => {
   const currentLanguage = 'Tiếng Việt'
-  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
+  const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
   const logoutMutation = useMutation({
     mutationFn: authApi.logOut,
     onSuccess: () => {
       setIsAuthenticated(false)
+      setProfile(null)
     }
   })
 
@@ -66,7 +68,7 @@ const Header = () => {
               renderPopover={
                 <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
                   <Link
-                    to={'profile'}
+                    to={path.profile}
                     className='block w-full bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
                   >
                     Tài khoản của tôi
@@ -89,15 +91,15 @@ const Header = () => {
               <div className='mr-2 h-6 w-6 flex-shrink-0'>
                 <img src={''} alt='avatar' className='h-full w-full rounded-full object-cover' />
               </div>
-              <div>lechinghia202</div>
+              <div>{profile?.email}</div>
             </Popover>
           ) : (
             <div className='flex items-center'>
-              <Link to={'register'} className='mx-3 capitalize hover:text-white/70'>
+              <Link to={path.register} className='mx-3 capitalize hover:text-white/70'>
                 Đăng ký
               </Link>
               <div className='h-4 border-r-[1px] border-r-white/40' />
-              <Link to={'login'} className='mx-3 capitalize hover:text-white/70'>
+              <Link to={path.login} className='mx-3 capitalize hover:text-white/70'>
                 Đăng nhập
               </Link>
             </div>

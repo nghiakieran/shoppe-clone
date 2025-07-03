@@ -9,6 +9,7 @@ import { AppContext } from '~/contexts/app.context'
 import { useContext } from 'react'
 import RejectedRoute from './RejectedRoute'
 import ProtectedRoute from './ProtectedRoute'
+import path from '~/constants/path'
 
 const useRouteElements = () => {
   const { isAuthenticated } = useContext(AppContext)
@@ -27,7 +28,7 @@ const useRouteElements = () => {
       element: <RejectedRoute isAuthenticated={isAuthenticated} />,
       children: [
         {
-          path: '/login',
+          path: path.login,
           element: (
             <RegisterLayout>
               <Login />
@@ -35,7 +36,7 @@ const useRouteElements = () => {
           )
         },
         {
-          path: '/register',
+          path: path.register,
           element: (
             <RegisterLayout>
               <Register />
@@ -49,7 +50,7 @@ const useRouteElements = () => {
       element: <ProtectedRoute isAuthenticated={isAuthenticated} />,
       children: [
         {
-          path: '/profile',
+          path: path.profile,
           element: (
             <MainLayout>
               <Profile />

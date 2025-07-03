@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import authApi from '~/apis/auth.api'
 import Button from '~/components/Button/Button'
 import Input from '~/components/Input/Input'
+import path from '~/constants/path'
 import { AppContext } from '~/contexts/app.context'
 import type { ErrorResponse } from '~/types/utils.type'
 import { loginSchema, type LoginType } from '~/utils/rules'
@@ -14,7 +15,7 @@ import { isAxiosUnprocessableEntityError } from '~/utils/utils'
 
 type FormData = LoginType
 const Login = () => {
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   const {
     register,
@@ -29,8 +30,9 @@ const Login = () => {
 
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         navigate('/')
       },
       onError: (error) => {
@@ -83,7 +85,7 @@ const Login = () => {
               </div>
               <div className='mt-8 flex items-center justify-center'>
                 <span className='text-gray-400'>Bạn chưa có tài khoản?</span>
-                <Link to='/register' className='ml-1 text-red-400'>
+                <Link to={path.register} className='ml-1 text-red-400'>
                   Đăng ký
                 </Link>
               </div>
