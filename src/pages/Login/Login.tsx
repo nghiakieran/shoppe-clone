@@ -1,16 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import authApi from '~/apis/auth.api'
+import Button from '~/components/Button/Button'
 import Input from '~/components/Input/Input'
+import path from '~/constants/path'
+import { AppContext } from '~/contexts/app.context'
 import type { ErrorResponse } from '~/types/utils.type'
 import { loginSchema, type LoginType } from '~/utils/rules'
 import { isAxiosUnprocessableEntityError } from '~/utils/utils'
 
 type FormData = LoginType
 const Login = () => {
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -25,7 +31,9 @@ const Login = () => {
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
-        console.log(data)
+        setIsAuthenticated(true)
+        setProfile(data.data.data.user)
+        navigate('/')
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
@@ -67,13 +75,17 @@ const Login = () => {
                 errorMessage={errors.password?.message}
               />
               <div className='mt-2'>
-                <button className='flex items-center justify-center uppercase w-full bg-orangeCustom/80 px-2 py-4 text-sm text-white hover:bg-orangeCustom/90'>
+                <Button
+                  isLoading={loginMutation.isPending}
+                  disabled={loginMutation.isPending}
+                  className='flex items-center justify-center uppercase w-full bg-orangeCustom/80 px-2 py-4 text-sm text-white hover:bg-orangeCustom/90'
+                >
                   Đăng nhập
-                </button>
+                </Button>
               </div>
               <div className='mt-8 flex items-center justify-center'>
                 <span className='text-gray-400'>Bạn chưa có tài khoản?</span>
-                <Link to='/register' className='ml-1 text-red-400'>
+                <Link to={path.register} className='ml-1 text-red-400'>
                   Đăng ký
                 </Link>
               </div>

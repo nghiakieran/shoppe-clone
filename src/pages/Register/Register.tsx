@@ -1,16 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { omit, type Omit } from 'lodash'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import authApi from '~/apis/auth.api'
+import Button from '~/components/Button/Button'
 import Input from '~/components/Input/Input'
+import path from '~/constants/path'
+import { AppContext } from '~/contexts/app.context'
 import type { ErrorResponse } from '~/types/utils.type'
 import { schema, type RegisterType } from '~/utils/rules'
 import { isAxiosUnprocessableEntityError } from '~/utils/utils'
 
 type FormData = RegisterType
 const Register = () => {
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -28,7 +34,9 @@ const Register = () => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
       onSuccess: (data) => {
-        console.log(data)
+        setIsAuthenticated(true)
+        setProfile(data.data.data.user)
+        navigate('/')
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
@@ -81,13 +89,17 @@ const Register = () => {
               />
 
               <div className='mt-2'>
-                <button className='flex items-center justify-center uppercase w-full bg-orangeCustom/80 px-2 py-4 text-sm text-white hover:bg-orangeCustom/90'>
+                <Button
+                  isLoading={registerAccountMutation.isPending}
+                  disabled={registerAccountMutation.isPending}
+                  className='flex items-center justify-center uppercase w-full bg-orangeCustom/80 px-2 py-4 text-sm text-white hover:bg-orangeCustom/90'
+                >
                   Đăng ký
-                </button>
+                </Button>
               </div>
               <div className='mt-8 flex items-center justify-center'>
                 <span className='text-gray-400'>Bạn đã có tài khoản?</span>
-                <Link to='/login' className='ml-1 text-red-400'>
+                <Link to={path.login} className='ml-1 text-red-400'>
                   Đăng nhập
                 </Link>
               </div>
